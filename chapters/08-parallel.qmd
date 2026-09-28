@@ -1,0 +1,13 @@
+---
+engine: markdown
+---
+
+# Scalability: Parallelization
+
+- Question before parallelizing: is this work independent? (bootstrap: yes / a single Gibbs chain: no)
+- **RcppParallel**: `Worker` struct, `parallelFor`, `parallelReduce`, `RVector`/`RMatrix` (thread-safe wrappers)
+- **Thread-safety**: no direct calls to the R API or Rcpp objects inside a worker. No writes to shared state. Each worker writes only to its own result slot
+- **RNG caveats**: `R::rnorm` etc. are not thread-safe. Use a per-worker `std::mt19937` with distinct seeds. Reproducibility comes from seed design (not covered in depth)
+- **Gibbs parallelizes across chains**: 4 chains $\times$ n iterations. Within a chain, stays sequential
+- `setThreadOptions()`, controlling the number of cores
+- Running example: parallel bootstrap, parallel multi-chain Gibbs. Measure time by core count $\rightarrow$ used in the Ch10 energy comparison

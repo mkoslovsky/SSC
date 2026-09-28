@@ -1,0 +1,51 @@
+project:
+  type: book
+  output-dir: _book
+  execute-dir: project
+  resources: 
+    - "examples/**/*.R"
+    - "examples/**/*.cpp"
+    - "scripts/setup.R"
+    - "data/README.md"
+    - "data/CCPP.rds"
+
+engine: markdown
+
+book:
+  title: "Sustainable Statistical Computing"
+  subtitle: "Advanced C++ with Rcpp"
+  author: "Hyungjoon Kim"
+  
+  site-url: "https://mkoslovsky.github.io/SSC"
+  repo-url: "https://github.com/mkoslovsky/SSC"
+  repo-branch: main
+  repo-actions: [edit, issue]
+  
+  chapters:
+    - index.qmd
+    - chapters/00-setup.qmd
+    - chapters/01-motivation.qmd
+    - chapters/02-rcpp-interface.qmd
+    - chapters/03-cpp-basics.qmd
+    - chapters/04-memory.qmd
+    - chapters/05-references.qmd
+    - chapters/06-oop.qmd
+    - chapters/07-profiling.qmd
+    - chapters/08-parallel.qmd
+    - chapters/09-reproducibility.qmd
+    - chapters/10-case-study.qmd
+    - chapters/references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-copy: true
+    code-overflow: wrap
+
+filters:
+  - include-code-files
+
+lang: en

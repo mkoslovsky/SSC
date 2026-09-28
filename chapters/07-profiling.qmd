@@ -1,0 +1,13 @@
+---
+engine: markdown
+---
+
+# Profiler: Optimize Your Code
+
+- **Measure before optimize**: measurement, not guesswork. Use Amdahl's law to decide what to fix first
+- R level: `bench::mark()` (time + memory allocation), `profvis` — confirm that the inside of Rcpp functions is invisible
+- C++ level: section timing with `std::chrono` (manual instrumentation); break down which stage is the bottleneck (find an easy profiler in C++ level)
+- Memory: measure peak memory (`mem_alloc` from `bench::mark`, system tools)
+- Energy: plug measured time, cores, and memory into the Green Algorithms formula [@lannelongue2021]
+- Common bottlenecks
+- Running example: profile the naive Rcpp Gibbs $\rightarrow$ remove bottlenecks in order $\rightarrow$ record the improvement at each step

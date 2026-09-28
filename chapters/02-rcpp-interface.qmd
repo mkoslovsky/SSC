@@ -1,0 +1,19 @@
+---
+engine: markdown
+---
+
+# Basic Rcpp: Interface between R and C++
+
+- `sourceCpp()`, `// [[Rcpp::export]]`, `cppFunction()`
+- Rcpp type mapping: `NumericVector`, `IntegerVector`, `NumericMatrix`, `List`, `DataFrame`, `Function`
+- R $\leftrightarrow$ C++ conversion (`as<>`, `wrap()`), 0-index vs 1-index, `NA` handling, integer overflow (int vs double)
+- Rcpp sugar (`sum`, `mean`, `rnorm`, `ifelse`, vector arithmetic, etc.): convenient, but not a silver bullet
+  - Use R vector syntax directly in C++ (`x * 2 + y`, `sum(x[x > 0])`)
+  - Composing expressions can materialize intermediate results (e.g., creating an `x[idx]` subset vector on every loop iteration). Writing with R habits reproduces R's allocation pattern in C++.
+  - Principle: sugar for short element-wise operations and preprocessing; explicit loops + Armadillo for the core loops (inside the bootstrap, Gibbs updates)
+- **RcppArmadillo**: use `arma::mat`, `arma::vec`, `solve()`, `chol()`, but avoid `inv()`
+  - `inv()` = LU decomposition + solving n triangular systems.
+  - `solve(A, b)` = decomposition + solving 1 triangular system.
+  - `inv(A) * b` builds the inverse, then multiplies again, so it does the work twice for the same answer
+  - In R: `solve(A, b)` instead of `solve(A) %*% b`; `chol2inv(chol(crossprod(X)))`instead of `solve(t(X) %*% X)`
+- Running example: the first Rcpp function - load CCPP as an `arma::mat` and compute OLS once

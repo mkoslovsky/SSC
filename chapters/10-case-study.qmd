@@ -1,0 +1,23 @@
+---
+engine: markdown
+---
+
+# Case Study: Best Practice vs. Anti-Pattern
+
+Compare the two tasks (bootstrap $B=10,000$ / Gibbs $4\text{ chains}\times20,000\text{ iter}$) across five implementations:
+
+| Implementation | Characteristics (anti-pattern → improvement) |
+|---|---|
+| Naive R | `for` + `rbind`, `solve(t(X) %*% X)`, repeated `lm()` calls |
+| Vectorized R | `apply`/matrix ops, `crossprod`, pre-allocation |
+| Naive Rcpp | R habits carried over: `push_back`, pass-by-value, recomputing $X^{T}X$ inside the loop, `inv()` |
+| Optimized Rcpp | Ch4–7 applied: pre-allocation, `const&`, Cholesky, hoisting computation out of loops, object-based Gibbs |
+| Parallel Optimized Rcpp | Ch8 applied: RcppParallel, 1/2/4/8 cores |
+
+- Metrics: wall time, peak memory, estimated energy (kWh), CO2e (table + figures)
+- Verify that statistical results are identical (bootstrap CI, posterior summaries): faster but wrong is meaningless
+- **Key points**
+  - Where the biggest gain comes from
+  - Parallelization $\neq$ always green: energy = time $\times$ power. If speedup is sublinear, adding cores can increase total energy
+  - Development time vs running time: code run once vs code run ten thousand times
+- Checklist — 10 questions to ask yourself before/after writing Rcpp code

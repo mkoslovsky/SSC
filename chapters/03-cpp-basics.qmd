@@ -1,0 +1,11 @@
+---
+engine: markdown
+---
+
+# C++ Basics: Useful C++ Features for R Users
+
+- Types and declarations: `auto`, `size_t` vs `int` (sign issues), `const`
+- STL containers: `std::vector`, `std::map`/`unordered_map`, `std::set` — correspondence to R's list / named vector
+- Iteration: range-based `for`, iterators, `std::algorithm` (`sort`, `accumulate`, `transform`)
+- Functions: overloading, default arguments, lambdas (reused in Ch8 with RcppParallel)
+- Running example: implement bootstrap index resampling with `std::vector<int>`

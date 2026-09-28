@@ -1,0 +1,20 @@
+---
+engine: markdown
+---
+
+# Preface {.unnumbered}
+
+This book helps R users write measurably efficient and sustainable statistical computing code through Rcpp. We connect C++ programming to their effects on running time, memory use, and estimated energy consumption. For this course, sustainability means obtaining the same statistical results with fewer computational resources, while considering the development effort required.
+
+## Running example
+
+The Combined Cycle Power Plant (CCPP) dataset from the UCI Machine Learning Repository provides a common example throughout the book [@tufekci2014dataset]. It contains 9,568 observations collected during full-load operation between 2006 and 2011. Hourly averages of ambient temperature (`AT`), exhaust vacuum (`V`), ambient pressure (`AP`), and relative humidity (`RH`) are used to predict electrical power output (`PE`, in MW). @tufekci2014 describes the prediction problem and compares machine learning regression methods.
+
+Our local copy, `data/CCPP.rds`, stores the first worksheet of the original workbook as an R data frame. It has five numeric columns without missing values. See [README.md](data/README.md) for variable definitions, source, and attribution.
+
+We use the linear regression model `PE ~ AT + V + AP + RH` for two recurring tasks:
+
+- **OLS bootstrap:** repeatedly resample observations and fit the model to estimate uncertainty.
+- **Bayesian linear regression:** use Gibbs sampling to summarize the posterior distribution of the model parameters.
+
+These repeated computations provide a shared basis for comparing R and Rcpp implementations as we study memory allocation, references, object oriented programming, profiling, parallelization, and reproducibility.

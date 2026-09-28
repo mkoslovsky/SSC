@@ -1,0 +1,43 @@
+name: Rendering Check (dev, PR to main)
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quarto-check-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  render:
+    name: Quarto render check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Render HTML book
+        run: |
+          quarto --version
+          quarto render --to html
+
+      - name: Save rendered book for review
+        uses: actions/upload-artifact@v7
+        with:
+          name: book-preview-${{ github.run_id }}-${{ github.run_attempt }}
+          path: _book/
+          retention-days: 7
+          if-no-files-found: error

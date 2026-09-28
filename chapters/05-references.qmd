@@ -1,0 +1,30 @@
+---
+engine: markdown
+---
+
+# Writing Efficient Code 2: Pointer and Reference
+
+- Pass-by-value vs pass-by-reference: what gets copied and what does not
+- `T`, `T*`, `T&`, `const T&`: when to use which (basic rule: `const T&` for large objects)
+  - Differences among the four
+
+    | Declaration | Meaning | Copy? | Nullable? | Rebindable to another target? | Modifying affects original? | Use |
+    |---|---|---|---|---|---|---|
+    | `T x` | Value (independent copy) | Yes (deep copy) | No | — | No | Small things (`int`, `double`, small structs) |
+    | `T* p` | Address. Access via `*p`, `p->` | No (8-byte address) | Yes | Yes | Yes | C APIs, ownership transfer, "may be absent" |
+    | `T& r` | Alias. Must be bound at declaration | No | No | No | Yes | Output arguments (in-place modification) |
+    | `const T& r` | Read-only alias | No | No | No | No (compile error) | **Default for large input arguments** |
+
+  - How to read it: `const arma::mat& X` = "X points directly to the caller's matrix (no copy) and cannot be changed inside this function." The goal is that the function signature alone tells you "what this function modifies"
+  - Decision rules
+    - Small and cheap (`int`, `double`, `bool`) $\rightarrow$ `T`. A reference would only add indirection cost
+    - Large, read-only $\rightarrow$ `const T&`. Feels like an R function argument (original unchanged) but the copy cost is zero
+    - Large, modified inside the function and returned $\rightarrow$ `T&` (Gibbs's `beta`, `sigma2` updates), or return by value and rely on return value optimization (RVO)
+    - `T*` only when none of the above three works
+  - Exception for Rcpp objects: `NumericVector` and `NumericMatrix` are thin proxies to a SEXP, so passing as `T` is a **shallow copy** (a single pointer). Cheap to pass by value, but modifying inside the function changes the R original (`clone()` in Ch4). By contrast, passing `arma::mat` as `T` is a real deep copy $\rightarrow$ confirmed by measurement in the running example
+- Pointers, minimally: `*`, `&`, `nullptr`, and why statistical code rarely needs raw pointers
+    - **Containers manage memory**: `std::vector`, `arma::mat`, `NumericVector` handle `new`/`delete` internally. The moment we write `new`, we take on the responsibility of remembering `delete`, the risk of leaks on exception paths, and the risk of double-free on copy
+    - **"Passing without copying" is fully covered by `const T&`**: most of what pointers used to solve. References cannot be null and cannot be rebound, so entire classes of bugs disappear
+    - **Data structures**: statistical computing is almost entirely arrays + linear algebra. Writing trees/graphs by hand or building virtual-function hierarchies is rare
+    - **Rcpp object lifetimes are managed by R's GC**: there is nothing for us to free
+- Running example: split one Gibbs iteration into a function and pass `const arma::mat& X`; measure against pass-by-value

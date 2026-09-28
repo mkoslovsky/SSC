@@ -1,0 +1,12 @@
+---
+engine: markdown
+---
+
+# Object Oriented Programming: Structure vs. Object
+
+- `struct` vs `class`: a bundle of data vs state + behavior. Constructors, member functions, `private`/`public`
+- **Why objects fit MCMC**: it is natural for a sampler to own state (current $\beta$, $\sigma^{2}$, iteration, RNG)
+- **Rcpp Modules** (`RCPP_MODULE`): treat a C++ class from R like a Reference class
+- **XPtr + R6 pattern**: keep the C++ object alive via XPtr, and have R6 hide that handle in `private` while providing an R-idiomatic interface
+- Running example link: expose the same `GibbsSampler` class both ways and compare R-side ergonomics and compile time
+- Running example: implement Gibbs ($\beta\mid\sigma^{2}\sim\text{N}$, $\sigma^{2}\mid\beta\sim\text{Inv-Gamma}$) as a class

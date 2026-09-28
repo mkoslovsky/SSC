@@ -1,0 +1,26 @@
+---
+engine: markdown
+---
+
+# Motivation: Why Green Code
+
+- **Limitation of R**: interpreted language; cost of loops and dynamic memory allocation; limits of vectorization (e.g., MCMC)
+- **Green computing**: computation = electricity = carbon.
+Statistical computing is not an exception (cumulative cost of repeated simulations, MCMC, bootstrap)
+- **Definition of sustainability for this course**: obtaining the same statistical result with less time, memory, and energy.
+Includes the trade-off against development time
+- **Energy estimation method**: the Green Algorithms formula [@lannelongue2021]
+$$
+\text{Energy}=t\times\left(\text{Core Power} + \text{Memory Power}\right)\times\text{Power Usage Effectiveness}
+$$
+$$
+\text{CO2e}=\text{Energy}\times\text{Carbon Intensity}
+$$
+  - Units: $\text{kWh}=\text{Watt}\times\text{hour}\div1000$
+  $$
+    \text{CO2e (g)}=\text{Energy (kWh)}\times\text{Carbon Intensity (g/kWh)}
+  $$
+  - Relation to parallelization: increasing cores k-fold multiplies the core term by exactly k, while $t$ shrinks by at most a factor of $1/k$ (Amdahl's law).
+  If speedup is sublinear, time goes down but total energy can go up.
+- **Introducing the running example**: the CCPP data, definition of the two tasks (bootstrap / Bayesian regression), and a preview of the five implementations to be compared in Ch10
+- First measurement: run both tasks in naive R and record baseline time, memory, and energy

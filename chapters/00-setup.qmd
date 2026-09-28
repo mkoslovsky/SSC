@@ -1,0 +1,35 @@
+---
+engine: markdown
+---
+
+# Setup {.unnumbered}
+
+You need R and a C++ build toolchain: [Rtools](https://cran.r-project.org/bin/windows/Rtools/) on Windows, [R development tools](https://cran.r-project.org/bin/macosx/tools/) on macOS.
+
+## Run the check
+
+Clone the [repository](https://github.com/mkoslovsky/SSC) and start R in its root directory. Run:
+
+```r
+source("./scripts/setup.R")
+source("./examples/00-setup/run.R")
+```
+
+The final message should be `Rcpp + RcppArmadillo check passed: 6`.
+
+## Source code
+
+[scripts/setup.R](../scripts/setup.R) installs any missing packages:
+
+```{.r include="../scripts/setup.R"}
+```
+
+[examples/00-setup/sum.cpp](../examples/00-setup/sum.cpp) uses Armadillo to sum a vector and exposes the function to R:
+
+```{.cpp include="../examples/00-setup/sum.cpp"}
+```
+
+[examples/00-setup/run.R](../examples/00-setup/run.R) compiles the C++ file, calls the function from R, and checks the result:
+
+```{.r include="../examples/00-setup/run.R"}
+```

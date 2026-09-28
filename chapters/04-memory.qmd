@@ -1,0 +1,11 @@
+---
+engine: markdown
+---
+
+# Writing Efficient Code 1: Memory Allocation
+
+- Stack vs heap, allocation cost: memory allocation is not free
+- **Shallow copy vs deep copy**: Rcpp objects are SEXP (Symbolic EXPression) proxies $\rightarrow$ modifying inside a function changes the R object. The meaning and cost of `clone()`
+- **Pre-allocation pattern**: repeated `push_back` vs `reserve()` / specifying size up front. The same problem as R's `c(x, ...)` anti-pattern
+- **Column-major & cache locality**: R/Armadillo are column-major. Performance changes just by reordering loops
+- Running example: pre-allocating the bootstrap result matrix vs `rbind` every iteration; in Gibbs, compute $X^{T}X$ and $X^{T}y$ once, outside the loop
